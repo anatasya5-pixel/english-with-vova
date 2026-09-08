@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>English with Vova</title>
+<style>
+*{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,Arial,sans-serif;background:#f6f8ff;color:#172033}
+.app{max-width:760px;margin:auto;padding:16px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.brand{font-size:22px;font-weight:900}.badge{background:white;border-radius:999px;padding:8px 12px}
+.card{margin-top:14px;background:white;border-radius:28px;padding:22px;text-align:center;box-shadow:0 8px 30px #24325a14}
+.scene{font-size:112px;line-height:1.15;margin:16px 0}.word{font-size:38px;font-weight:900;letter-spacing:2px}
+.hint{font-size:17px;color:#667085;margin:10px auto 22px;max-width:520px}
+.progress{display:flex;justify-content:center;gap:8px;margin:18px}.dot{width:38px;height:9px;border-radius:20px;background:#e4e7ec}.dot.on{background:#7c5cff}
+button{border:0;border-radius:18px;min-height:54px;padding:12px 24px;font-size:18px;font-weight:800;cursor:pointer}
+.primary{background:#7c5cff;color:white}.secondary{background:#eef0f6;color:#172033}
+.actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.reward{margin-top:14px;background:white;border-radius:20px;padding:14px 18px;display:flex;justify-content:space-between;align-items:center}
+.small{font-size:14px;color:#667085}.stars{font-size:24px}
+@media(max-width:480px){.scene{font-size:88px}.word{font-size:30px}.app{padding:10px}.card{padding:18px}}
+</style>
+</head>
+<body>
+<main class="app">
+  <div class="top"><div class="brand">English with Vova</div><div class="badge">🏝️ Урок 1</div></div>
+  <section class="card">
+    <div id="scene" class="scene">👋</div>
+    <div id="word" class="word">Hello!</div>
+    <div id="hint" class="hint">Смотри на картинку и слушай преподавателя. Читать пока не нужно.</div>
+    <div id="progress" class="progress"></div>
+    <div class="actions">
+      <button id="back" class="secondary">← Назад</button>
+      <button id="next" class="primary">Дальше →</button>
+    </div>
+  </section>
+  <section class="reward">
+    <div><b>Награда</b><div id="rewardText" class="small">Пройди четыре шага</div></div>
+    <div id="stars" class="stars">☆ ☆ ☆</div>
+  </section>
+</main>
+<script>
+const screens=[
+ {scene:"👋",word:"Hello!",hint:"Смотри на картинку и слушай преподавателя. Читать пока не нужно."},
+ {scene:"👦",word:"",hint:"Сейчас преподаватель спросит имя. Просто послушай."},
+ {scene:"👦💬",word:"My     name     is     Vova.",hint:"Повтори за преподавателем очень медленно."},
+ {scene:"🏆⭐",word:"Great!",hint:"Первый мини-урок закончен. Отличная работа!"}
+];
+let i=0;
+const scene=document.querySelector("#scene"),word=document.querySelector("#word"),hint=document.querySelector("#hint"),
+progress=document.querySelector("#progress"),next=document.querySelector("#next"),back=document.querySelector("#back"),
+stars=document.querySelector("#stars"),rewardText=document.querySelector("#rewardText");
+function render(){
+ const s=screens[i]; scene.textContent=s.scene; word.textContent=s.word; hint.textContent=s.hint;
+ progress.innerHTML=screens.map((_,n)=>`<span class="dot ${n<=i?'on':''}"></span>`).join("");
+ back.disabled=i===0; back.style.opacity=i===0?".4":"1";
+ next.textContent=i===screens.length-1?"Сначала ↻":"Дальше →";
+ if(i===screens.length-1){stars.textContent="★ ☆ ☆";rewardText.textContent="Первая звезда получена!";}
+ else{stars.textContent="☆ ☆ ☆";rewardText.textContent="Пройди четыре шага";}
+}
+next.onclick=()=>{i=i===screens.length-1?0:i+1;render()};
+back.onclick=()=>{if(i>0)i--;render()};
+render();
+</script>
+</body>
+</html>
