@@ -218,7 +218,7 @@ function speakEnglish(text,statusEl){
  }
  speechSynthesis.cancel();
  const u=new SpeechSynthesisUtterance(text);
- u.lang="en-US";u.rate=.58;u.pitch=1.02;
+ u.lang="en-US";u.rate=.72;u.pitch=1.02;
  if(englishVoice)u.voice=englishVoice;
  if(statusEl){
    statusEl.textContent="Слушай и повторяй…";
