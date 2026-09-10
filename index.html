@@ -1,343 +1,39 @@
-<!doctype html>
-<html lang="ru">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>English with Vova</title>
-<style>
-*{box-sizing:border-box}
-:root{
-  --bg:#f6f8ff;--card:#fff;--ink:#172033;--muted:#667085;--accent:#7c5cff;
-  --accent2:#5d43d1;--line:#e4e7ec;--soft:#f2efff;--good:#eafff3;--goodline:#69c895;
-  --bad:#fff0f0;--badline:#e59a9a;--sun:#fff7d6;
-}
-body{margin:0;font-family:system-ui,-apple-system,Arial,sans-serif;background:linear-gradient(160deg,#f6f8ff,#f9fbff 52%,#f8f4ff);color:var(--ink)}
-.app{max-width:820px;margin:auto;padding:14px 12px 34px}
-.top{display:flex;justify-content:space-between;align-items:center;gap:12px}
-.brand{font-size:22px;font-weight:900}
-.badge{background:white;border:1px solid #eceef4;border-radius:999px;padding:8px 12px;font-weight:800}
-.lesson-tabs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
-.lesson-tab{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:18px;min-height:52px;padding:10px 14px;font-size:17px;font-weight:900;cursor:pointer}
-.lesson-tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
-.lesson{display:none}.lesson.active{display:block}
-.card{margin-top:14px;background:white;border:1px solid #eef0f4;border-radius:28px;padding:22px;text-align:center;box-shadow:0 8px 30px #24325a14}
-.scene{font-size:112px;line-height:1.15;margin:16px 0}
-.word{font-size:38px;font-weight:900;letter-spacing:2px}
-.hint{font-size:17px;color:var(--muted);margin:10px auto 22px;max-width:560px;line-height:1.45}
-.progress{display:flex;justify-content:center;gap:7px;margin:18px 0}
-.dot{height:9px;flex:1;max-width:44px;border-radius:20px;background:#e4e7ec}
-.dot.on{background:var(--accent)}
-button{border:0;border-radius:18px;min-height:54px;padding:12px 24px;font-size:18px;font-weight:800;cursor:pointer}
-button:disabled{cursor:default}
-.primary{background:var(--accent);color:white}
-.secondary{background:#eef0f6;color:var(--ink)}
-.actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
-.reward{margin-top:14px;background:white;border:1px solid #eef0f4;border-radius:20px;padding:14px 18px;display:flex;justify-content:space-between;align-items:center}
-.small{font-size:14px;color:var(--muted)}.stars{font-size:24px}
-.listen{background:var(--sun);color:#5a4610;border:1px solid #efd778}
-.audio-status{min-height:22px;color:var(--muted);font-size:14px;margin-top:8px}
-.lesson2-head{margin-bottom:4px}.lesson2-head h2{margin:3px 0 7px;font-size:26px}.lesson2-head p{margin:0 auto;color:var(--muted);max-width:570px;line-height:1.45}
-.l2-screen{display:none}.l2-screen.active{display:block}
-.l2-visual{
-  width:min(310px,78vw);height:min(270px,68vw);margin:14px auto 16px;border-radius:34px;
-  display:flex;align-items:center;justify-content:center;font-size:min(148px,36vw);
-  background:linear-gradient(145deg,#fffaf0,#f4efff);border:2px solid #eee7ff;position:relative;overflow:hidden
-}
-.l2-visual:after{content:"";position:absolute;left:18%;right:18%;bottom:18px;height:15px;border-radius:50%;background:#26324713}
-.l2-word{font-size:40px;font-weight:1000;letter-spacing:1px;margin:5px 0 12px}
-.l2-ru{color:var(--muted);font-size:15px;margin-top:-7px;margin-bottom:12px}
-.parent-note{margin:16px auto 0;max-width:580px;padding:12px 14px;border:1px dashed #cfd4df;border-radius:16px;background:#fafbfe;color:#5b6576;font-size:14px;line-height:1.4;text-align:left}
-.quiz-title{font-size:26px;font-weight:950;margin:5px 0 8px}
-.quiz-choices{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px auto 0;max-width:610px}
-.quiz-choice{background:#fff;border:2px solid var(--line);border-radius:22px;min-height:150px;font-size:72px;padding:10px}
-.quiz-choice.good{background:var(--good);border-color:var(--goodline)}
-.quiz-choice.bad{background:var(--bad);border-color:var(--badline)}
-.quiz-status{min-height:29px;font-weight:900;margin-top:12px}
-.quiz-score{color:var(--muted);font-size:14px}
-.word-strip{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;margin:13px auto 0;max-width:620px}
-.word-chip{border:1px solid var(--line);background:#fafafe;padding:6px 9px;border-radius:999px;font-size:13px;font-weight:800;color:#5d6575}
-.final-cup{font-size:108px;margin:8px 0 2px}
-@media(max-width:520px){
-  .scene{font-size:88px}.word{font-size:30px}.app{padding:10px}.card{padding:18px}
-  .brand{font-size:19px}.lesson2-head h2{font-size:23px}.l2-word{font-size:34px}
-  .quiz-choices{gap:8px}.quiz-choice{min-height:120px;font-size:58px;padding:6px}
-}
-</style>
-</head>
-<body>
-<main class="app">
-  <div class="top"><div class="brand">English with Vova</div><div id="topBadge" class="badge">🏝️ Урок 1</div></div>
-
-  <div class="lesson-tabs" role="tablist" aria-label="Уроки">
-    <button id="tab1" class="lesson-tab active" type="button">Урок 1 ⭐</button>
-    <button id="tab2" class="lesson-tab" type="button">Урок 2 🎨</button>
-  </div>
-
-  <section id="lesson1" class="lesson active">
-    <section class="card">
-      <div id="scene1" class="scene">👋</div>
-      <div id="word1" class="word">Hello!</div>
-      <div id="hint1" class="hint">Смотри на картинку и слушай преподавателя. Читать пока не нужно.</div>
-      <div id="progress1" class="progress"></div>
-      <div class="actions">
-        <button id="back1" class="secondary" type="button">← Назад</button>
-        <button id="next1" class="primary" type="button">Дальше →</button>
-      </div>
-    </section>
-    <section class="reward">
-      <div><b>Награда</b><div id="rewardText1" class="small">Пройди четыре шага</div></div>
-      <div id="stars1" class="stars">☆ ☆ ☆</div>
-    </section>
-  </section>
-
-  <section id="lesson2" class="lesson">
-    <section class="card">
-      <div class="lesson2-head">
-        <div class="small" style="font-weight:900;color:var(--accent)">10 новых слов • смотрим • слушаем • повторяем</div>
-        <h2 id="l2Title">Повторяем знакомое 👋</h2>
-        <p id="l2Intro">Читать пока не нужно. Вова связывает картинку со звучанием слова.</p>
-      </div>
-
-      <div id="l2Screens">
-        <div class="l2-screen active" data-kind="repeat" data-scene="👋" data-word="Hello!" data-say="Hello!" data-ru="" data-title="Повторяем знакомое 👋" data-note="Вова слушает и говорит: Hello!"></div>
-        <div class="l2-screen" data-kind="repeat" data-scene="👦" data-word="My name is Vova." data-say="My name is Vova." data-ru="" data-title="Повторяем фразу 🙂" data-note="Сначала слушаем. Затем Вова повторяет медленно один раз."></div>
-
-        <div class="l2-screen" data-kind="word" data-scene="🍎" data-word="apple" data-say="apple" data-ru="яблоко" data-title="Новое слово 1 из 10" data-note="Послушай → повтори два раза."></div>
-        <div class="l2-screen" data-kind="word" data-scene="⚽" data-word="ball" data-say="ball" data-ru="мяч" data-title="Новое слово 2 из 10" data-note="Послушай → повтори два раза."></div>
-        <div class="l2-screen" data-kind="word" data-scene="🚗" data-word="car" data-say="car" data-ru="машина" data-title="Новое слово 3 из 10" data-note="Послушай → повтори два раза."></div>
-        <div class="l2-screen" data-kind="word" data-scene="☀️" data-word="sun" data-say="sun" data-ru="солнце" data-title="Новое слово 4 из 10" data-note="Послушай → повтори два раза."></div>
-        <div class="l2-screen" data-kind="word" data-scene="📘" data-word="book" data-say="book" data-ru="книга" data-title="Новое слово 5 из 10" data-note="Послушай → повтори два раза."></div>
-        <div class="l2-screen" data-kind="word" data-scene="🐟" data-word="fish" data-say="fish" data-ru="рыба" data-title="Новое слово 6 из 10" data-note="Послушай → повтори два раза."></div>
-        <div class="l2-screen" data-kind="word" data-scene="🐦" data-word="bird" data-say="bird" data-ru="птица" data-title="Новое слово 7 из 10" data-note="Послушай → повтори два раза."></div>
-        <div class="l2-screen" data-kind="word" data-scene="🏠" data-word="house" data-say="house" data-ru="дом" data-title="Новое слово 8 из 10" data-note="Послушай → повтори два раза."></div>
-        <div class="l2-screen" data-kind="word" data-scene="🥛" data-word="milk" data-say="milk" data-ru="молоко" data-title="Новое слово 9 из 10" data-note="Послушай → повтори два раза."></div>
-        <div class="l2-screen" data-kind="word" data-scene="💧" data-word="water" data-say="water" data-ru="вода" data-title="Новое слово 10 из 10" data-note="Послушай → повтори два раза."></div>
-
-        <div class="l2-screen" data-kind="quiz"></div>
-        <div class="l2-screen" data-kind="finish"></div>
-      </div>
-
-      <div id="l2Learn">
-        <div id="l2Visual" class="l2-visual">👋</div>
-        <div id="l2Word" class="l2-word">Hello!</div>
-        <div id="l2Ru" class="l2-ru"></div>
-        <button id="listen2" class="listen" type="button">🔊 Слушать</button>
-        <div id="audioStatus2" class="audio-status" aria-live="polite"></div>
-        <div id="parentNote2" class="parent-note">Вова слушает и говорит: <b>Hello!</b></div>
-      </div>
-
-      <div id="l2Quiz" style="display:none">
-        <div class="quiz-title">Игра на слух 🎧</div>
-        <div class="hint" style="margin-bottom:12px">Нажми «Слушать слово», затем выбери правильную картинку. Читать не нужно.</div>
-        <button id="quizListen2" class="listen" type="button">🔊 Слушать слово</button>
-        <div id="quizChoices2" class="quiz-choices"></div>
-        <div id="quizStatus2" class="quiz-status" aria-live="polite"></div>
-        <div id="quizScore2" class="quiz-score">Правильных ответов: 0 из 5</div>
-      </div>
-
-      <div id="l2Finish" style="display:none">
-        <div class="final-cup">🏆</div>
-        <div class="quiz-title">Урок 2 пройден!</div>
-        <div class="hint">Вова познакомился с десятью новыми словами и потренировал понимание на слух.</div>
-        <div class="stars" style="font-size:40px">★ ★ ★</div>
-        <div class="word-strip">
-          <span class="word-chip">🍎 apple</span><span class="word-chip">⚽ ball</span><span class="word-chip">🚗 car</span>
-          <span class="word-chip">☀️ sun</span><span class="word-chip">📘 book</span><span class="word-chip">🐟 fish</span>
-          <span class="word-chip">🐦 bird</span><span class="word-chip">🏠 house</span><span class="word-chip">🥛 milk</span><span class="word-chip">💧 water</span>
-        </div>
-        <div class="parent-note">После урока можно вернуться в голосовой чат ChatGPT: я называю одно из новых слов, Вова показывает/говорит ответ, и я мягко поправляю произношение.</div>
-      </div>
-
-      <div id="progress2" class="progress"></div>
-      <div class="actions">
-        <button id="back2" class="secondary" type="button">← Назад</button>
-        <button id="next2" class="primary" type="button">Дальше →</button>
-      </div>
-    </section>
-    <section class="reward">
-      <div><b>Награда урока 2</b><div id="rewardText2" class="small">Пройди урок и игру</div></div>
-      <div id="stars2" class="stars">☆ ☆ ☆</div>
-    </section>
-  </section>
-</main>
-
-<script>
-const tab1=document.querySelector("#tab1"),tab2=document.querySelector("#tab2"),
-lesson1=document.querySelector("#lesson1"),lesson2=document.querySelector("#lesson2"),topBadge=document.querySelector("#topBadge");
-
-function showLesson(n){
-  const one=n===1;
-  lesson1.classList.toggle("active",one);
-  lesson2.classList.toggle("active",!one);
-  tab1.classList.toggle("active",one);
-  tab2.classList.toggle("active",!one);
-  topBadge.textContent=one?"🏝️ Урок 1":"🎨 Урок 2";
-  window.scrollTo({top:0,behavior:"smooth"});
-}
-tab1.onclick=()=>showLesson(1);
-tab2.onclick=()=>showLesson(2);
-
-/* УРОК 1 — сохранён по прежней логике */
-const screens1=[
- {scene:"👋",word:"Hello!",hint:"Смотри на картинку и слушай преподавателя. Читать пока не нужно."},
- {scene:"👦",word:"",hint:"Сейчас преподаватель спросит имя. Просто послушай."},
- {scene:"👦💬",word:"My     name     is     Vova.",hint:"Повтори за преподавателем очень медленно."},
- {scene:"🏆⭐",word:"Great!",hint:"Первый мини-урок закончен. Отличная работа!"}
-];
-let i1=0;
-const scene1=document.querySelector("#scene1"),word1=document.querySelector("#word1"),hint1=document.querySelector("#hint1"),
-progress1=document.querySelector("#progress1"),next1=document.querySelector("#next1"),back1=document.querySelector("#back1"),
-stars1=document.querySelector("#stars1"),rewardText1=document.querySelector("#rewardText1");
-function render1(){
- const s=screens1[i1];scene1.textContent=s.scene;word1.textContent=s.word;hint1.textContent=s.hint;
- progress1.innerHTML=screens1.map((_,n)=>`<span class="dot ${n<=i1?'on':''}"></span>`).join("");
- back1.disabled=i1===0;back1.style.opacity=i1===0?".4":"1";
- next1.textContent=i1===screens1.length-1?"Сначала ↻":"Дальше →";
- if(i1===screens1.length-1){stars1.textContent="★ ☆ ☆";rewardText1.textContent="Первая звезда получена!";}
- else{stars1.textContent="☆ ☆ ☆";rewardText1.textContent="Пройди четыре шага";}
-}
-next1.onclick=()=>{i1=i1===screens1.length-1?0:i1+1;render1()};
-back1.onclick=()=>{if(i1>0)i1--;render1()};
-render1();
-
-/* ОЗВУЧКА */
-let englishVoice=null;
-function selectEnglishVoice(){
- if(!("speechSynthesis" in window))return;
- const voices=speechSynthesis.getVoices();
- const female=/samantha|zira|aria|jenny|ava|victoria|karen|moira|serena|susan|tessa|female/i;
- englishVoice=voices.find(v=>/^en-US/i.test(v.lang)&&female.test(v.name))
-   ||voices.find(v=>/^en-GB/i.test(v.lang)&&female.test(v.name))
-   ||voices.find(v=>/^en/i.test(v.lang)&&female.test(v.name))
-   ||voices.find(v=>/^en-US/i.test(v.lang)&&/google us english/i.test(v.name))
-   ||voices.find(v=>/^en-US/i.test(v.lang))
-   ||voices.find(v=>/^en-GB/i.test(v.lang))
-   ||voices.find(v=>/^en/i.test(v.lang))
-   ||null;
-}
-if("speechSynthesis" in window){
- selectEnglishVoice();
- speechSynthesis.addEventListener?.("voiceschanged",selectEnglishVoice);
-}
-function speakEnglish(text,statusEl){
- if(!("speechSynthesis" in window)){
-   if(statusEl)statusEl.textContent="На этом устройстве браузерная озвучка недоступна.";
-   return;
- }
- speechSynthesis.cancel();
- const u=new SpeechSynthesisUtterance(text);
- u.lang="en-US";u.rate=.72;u.pitch=1.04;
- if(englishVoice)u.voice=englishVoice;
- if(statusEl){
-   statusEl.textContent="Слушай и повторяй…";
-   u.onend=()=>{statusEl.textContent=""};
-   u.onerror=()=>{statusEl.textContent="Не удалось включить звук. Нажми ещё раз."};
- }
- speechSynthesis.speak(u);
-}
-
-/* УРОК 2 */
-const l2Screens=[...document.querySelectorAll(".l2-screen")];
-let i2=0;
-const l2Title=document.querySelector("#l2Title"),l2Learn=document.querySelector("#l2Learn"),
-l2Visual=document.querySelector("#l2Visual"),l2Word=document.querySelector("#l2Word"),l2Ru=document.querySelector("#l2Ru"),
-listen2=document.querySelector("#listen2"),audioStatus2=document.querySelector("#audioStatus2"),parentNote2=document.querySelector("#parentNote2"),
-l2Quiz=document.querySelector("#l2Quiz"),l2Finish=document.querySelector("#l2Finish"),progress2=document.querySelector("#progress2"),
-back2=document.querySelector("#back2"),next2=document.querySelector("#next2"),stars2=document.querySelector("#stars2"),rewardText2=document.querySelector("#rewardText2");
-
-function render2(){
- const s=l2Screens[i2],kind=s.dataset.kind;
- l2Screens.forEach((el,n)=>el.classList.toggle("active",n===i2));
- progress2.innerHTML=l2Screens.map((_,n)=>`<span class="dot ${n<=i2?'on':''}"></span>`).join("");
- back2.disabled=i2===0;back2.style.opacity=i2===0?".4":"1";
- next2.style.display="";
- l2Learn.style.display="none";l2Quiz.style.display="none";l2Finish.style.display="none";
- audioStatus2.textContent="";
- if(kind==="repeat"||kind==="word"){
-   l2Learn.style.display="";
-   l2Title.textContent=s.dataset.title;
-   l2Visual.textContent=s.dataset.scene;
-   l2Word.textContent=s.dataset.word;
-   l2Ru.textContent=s.dataset.ru||"";
-   listen2.dataset.say=s.dataset.say;
-   parentNote2.textContent=s.dataset.note;
-   next2.textContent="Дальше →";
- } else if(kind==="quiz"){
-   l2Title.textContent="Проверяем на слух 🎧";
-   l2Quiz.style.display="";
-   next2.textContent=quizRounds2>=5?"К награде →":"Пропустить игру →";
-   if(!quizTarget2&&quizRounds2<5)startQuizRound2(false);
- } else {
-   l2Title.textContent="Готово! 🎉";
-   l2Finish.style.display="";
-   next2.textContent="Сначала ↻";
-   stars2.textContent="★ ★ ★";
-   rewardText2.textContent="Урок 2 пройден!";
- }
-}
-listen2.onclick=()=>speakEnglish(listen2.dataset.say,audioStatus2);
-next2.onclick=()=>{
- if(i2===l2Screens.length-1){i2=0;resetQuiz2();stars2.textContent="☆ ☆ ☆";rewardText2.textContent="Пройди урок и игру";render2();return}
- i2++;render2();
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>English with Vova</title><style>
+*{box-sizing:border-box}:root{--ink:#172033;--muted:#667085;--a:#7c5cff;--line:#e4e7ec;--good:#eafff3;--bad:#fff0f0;--sun:#fff7d6}body{margin:0;font-family:system-ui,-apple-system,Arial,sans-serif;background:linear-gradient(155deg,#f6f8ff,#fbf9ff);color:var(--ink)}.app{max-width:820px;margin:auto;padding:14px 12px 34px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px}.brand{font-size:22px;font-weight:900}.badge{background:#fff;border:1px solid #eceef4;border-radius:999px;padding:8px 12px;font-weight:800}.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:14px}.tab{border:1px solid var(--line);background:#fff;border-radius:17px;min-height:50px;padding:8px;font-weight:900;font-size:16px}.tab.on{background:var(--a);color:#fff;border-color:var(--a)}.card{margin-top:14px;background:#fff;border:1px solid #eef0f4;border-radius:28px;padding:22px;text-align:center;box-shadow:0 8px 30px #24325a14}.kicker{font-size:14px;font-weight:900;color:var(--a)}h2{font-size:26px;margin:5px 0 7px}.hint{font-size:16px;line-height:1.45;color:var(--muted);max-width:590px;margin:8px auto 18px}.visual{width:min(310px,78vw);height:min(260px,68vw);margin:12px auto 16px;border-radius:34px;display:flex;align-items:center;justify-content:center;font-size:min(142px,36vw);background:linear-gradient(145deg,#fffaf0,#f4efff);border:2px solid #eee7ff}.word{font-size:38px;font-weight:1000;letter-spacing:1px;margin:5px 0}.ru{color:var(--muted);font-size:15px;margin:2px 0 12px}button{border:0;border-radius:17px;min-height:52px;padding:11px 20px;font-size:17px;font-weight:850;cursor:pointer}.primary{background:var(--a);color:#fff}.secondary{background:#eef0f6;color:var(--ink)}.listen{background:var(--sun);color:#5a4610;border:1px solid #efd778}.actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:15px}.progress{display:flex;gap:6px;justify-content:center;margin:18px 0 0}.dot{height:8px;flex:1;max-width:38px;background:#e4e7ec;border-radius:20px}.dot.on{background:var(--a)}.reward{margin-top:13px;background:#fff;border:1px solid #eef0f4;border-radius:20px;padding:13px 16px;display:flex;justify-content:space-between;align-items:center}.small{font-size:14px;color:var(--muted)}.stars{font-size:24px}.note{margin:14px auto 0;max-width:590px;padding:11px 13px;border:1px dashed #cfd4df;border-radius:15px;background:#fafbfe;color:#5b6576;font-size:14px;line-height:1.4;text-align:left}.choices{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;max-width:620px;margin:14px auto}.choice{background:#fff;border:2px solid var(--line);border-radius:22px;min-height:145px;font-size:70px;padding:8px}.choice.good{background:var(--good);border-color:#69c895}.choice.bad{background:var(--bad);border-color:#e59a9a}.status{min-height:28px;font-weight:900}.score{font-size:14px;color:var(--muted)}.chips{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;margin-top:13px}.chip{border:1px solid var(--line);background:#fafafe;padding:6px 9px;border-radius:999px;font-size:13px;font-weight:800;color:#5d6575}.finish{font-size:100px}.combo{grid-template-columns:repeat(2,1fr)}.combo .choice{font-size:58px}.read{grid-template-columns:repeat(2,1fr);max-width:520px}.read .choice{font-size:32px;min-height:120px}@media(max-width:520px){.brand{font-size:19px}.tab{font-size:14px;padding:7px 4px}.card{padding:17px}h2{font-size:22px}.word{font-size:33px}.choice{min-height:115px;font-size:55px}.combo .choice{font-size:45px}}
+</style></head><body><main class="app"><div class="top"><div class="brand">English with Vova</div><div id="badge" class="badge">🏝️ Урок 1</div></div><div id="tabs" class="tabs"></div><section class="card"><div id="kicker" class="kicker"></div><h2 id="title"></h2><div id="hint" class="hint"></div><div id="body"></div><div id="progress" class="progress"></div><div class="actions"><button id="back" class="secondary">← Назад</button><button id="next" class="primary">Дальше →</button></div></section><section class="reward"><div><b id="rewardTitle">Награда</b><div id="rewardText" class="small"></div></div><div id="stars" class="stars">☆ ☆ ☆</div></section></main><script>
+const oldWords=[['apple','🍎','яблоко'],['ball','⚽','мяч'],['car','🚗','машина'],['sun','☀️','солнце'],['book','📘','книга'],['fish','🐟','рыба'],['bird','🐦','птица'],['house','🏠','дом'],['milk','🥛','молоко'],['water','💧','вода']];
+const newWords=[['red','🔴','красный'],['blue','🔵','синий'],['green','🟢','зелёный'],['yellow','🟡','жёлтый'],['black','⚫','чёрный'],['white','⚪','белый'],['big','🐘','большой'],['small','🐭','маленький'],['one','1️⃣','один'],['two','2️⃣','два']];
+const L={
+1:{icon:'🏝️',name:'Урок 1',reward:'Пройди четыре шага',screens:[
+ {t:'plain',title:'Приветствие 👋',v:'👋',w:'Hello!',hint:'Смотри на картинку и слушай преподавателя. Читать пока не нужно.'},
+ {t:'plain',title:'Слушаем вопрос 🙂',v:'👦',w:'',hint:'Сейчас преподаватель спросит имя. Просто послушай.'},
+ {t:'plain',title:'Отвечаем',v:'👦💬',w:'My     name     is     Vova.',hint:'Повтори за преподавателем очень медленно.'},
+ {t:'finish1',title:'Great!',hint:'Первый мини-урок закончен. Отличная работа!'}]},
+2:{icon:'🎨',name:'Урок 2',reward:'Пройди урок и игру',screens:[
+ {t:'listen',title:'Повторяем знакомое 👋',v:'👋',w:'Hello!',say:'Hello!',hint:'Слушай и повторяй. Читать не нужно.'},
+ {t:'listen',title:'Повторяем фразу 🙂',v:'👦',w:'My name is Vova.',say:'My name is Vova.',hint:'Сначала слушаем, потом повторяем.'},
+ ...oldWords.map((x,i)=>({t:'listen',title:`Новое слово ${i+1} из 10`,v:x[1],w:x[0],ru:x[2],say:x[0],hint:'Картинка → звук → повтори два раза.'})),
+ {t:'quiz2',title:'Проверяем на слух 🎧',hint:'Слушай слово и выбери правильную картинку. Читать не нужно.'},
+ {t:'finish2',title:'Урок 2 пройден!',hint:'10 новых слов и тренировка понимания на слух.'}]},
+3:{icon:'🌈',name:'Урок 3',reward:'Цвета, размеры и первые сочетания',screens:[
+ {t:'review3',title:'Быстрое повторение 🎧',hint:'Слушай слова прошлого урока и выбирай картинки. Нужно 4 правильных ответа.'},
+ ...newWords.map((x,i)=>({t:'listen',title:`Новое слово ${i+1} из 10`,v:x[1],w:x[0],ru:x[2],say:x[0],hint:'Картинка → звук → повтори два раза.'})),
+ {t:'combo3',title:'Говорим по два слова 🧩',hint:'Нажимай на картинки, слушай и повторяй целиком.'},
+ {t:'read3',title:'Первый шаг к чтению 👀',hint:'Звучание уже знакомо. Теперь просто запоминаем вид двух слов — без чтения по буквам.'},
+ {t:'finish3',title:'Урок 3 пройден!',hint:'Повторили старые слова, выучили 10 новых и начали соединять слова.'}]}
 };
-back2.onclick=()=>{if(i2>0)i2--;render2()};
-
-const vocab2=[
- {w:"apple",e:"🍎"},{w:"ball",e:"⚽"},{w:"car",e:"🚗"},{w:"sun",e:"☀️"},{w:"book",e:"📘"},
- {w:"fish",e:"🐟"},{w:"bird",e:"🐦"},{w:"house",e:"🏠"},{w:"milk",e:"🥛"},{w:"water",e:"💧"}
-];
-const quizListen2=document.querySelector("#quizListen2"),quizChoices2=document.querySelector("#quizChoices2"),
-quizStatus2=document.querySelector("#quizStatus2"),quizScore2=document.querySelector("#quizScore2");
-let quizTarget2=null,quizScoreCount2=0,quizRounds2=0;
-
-function shuffled2(arr){
- const a=[...arr];
- for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}
- return a;
-}
-function startQuizRound2(autoSpeak=true){
- if(quizRounds2>=5){
-   quizTarget2=null;
-   quizStatus2.textContent="🏆 Отлично! Пять заданий выполнены.";
-   next2.textContent="К награде →";
-   return;
- }
- quizTarget2=vocab2[Math.floor(Math.random()*vocab2.length)];
- const wrong=shuffled2(vocab2.filter(x=>x.w!==quizTarget2.w)).slice(0,2);
- const opts=shuffled2([quizTarget2,...wrong]);
- quizChoices2.innerHTML="";
- opts.forEach(item=>{
-   const b=document.createElement("button");
-   b.type="button";b.className="quiz-choice";b.textContent=item.e;b.setAttribute("aria-label","Картинка");
-   b.onclick=()=>chooseQuiz2(b,item);
-   quizChoices2.appendChild(b);
- });
- quizStatus2.textContent="";
- if(autoSpeak)speakEnglish(quizTarget2.w,quizStatus2);
-}
-function chooseQuiz2(btn,item){
- if(!quizTarget2){quizStatus2.textContent="Нажми «Слушать слово».";return}
- if(item.w===quizTarget2.w){
-   btn.classList.add("good");quizScoreCount2++;quizRounds2++;
-   quizScore2.textContent=`Правильных ответов: ${quizScoreCount2} из 5`;
-   quizStatus2.textContent="⭐ Правильно!";
-   quizTarget2=null;
-   setTimeout(()=>startQuizRound2(true),650);
- }else{
-   btn.classList.add("bad");
-   quizStatus2.textContent="Попробуй ещё раз 🙂";
-   speakEnglish(quizTarget2.w,null);
- }
-}
-quizListen2.onclick=()=>{
- if(!quizTarget2)startQuizRound2(true);
- else speakEnglish(quizTarget2.w,quizStatus2);
-};
-function resetQuiz2(){
- quizTarget2=null;quizScoreCount2=0;quizRounds2=0;
- quizChoices2.innerHTML="";quizStatus2.textContent="";quizScore2.textContent="Правильных ответов: 0 из 5";
-}
-render2();
-</script>
-</body>
-</html>
+let lesson=1,step=0;const quiz={2:{n:0,target:null},3:{n:0,target:null}};let voice=null;
+const $=s=>document.querySelector(s),body=$('#body'),title=$('#title'),hint=$('#hint'),kicker=$('#kicker'),progress=$('#progress'),back=$('#back'),next=$('#next'),stars=$('#stars'),rewardText=$('#rewardText'),badge=$('#badge');
+function pickVoice(){if(!('speechSynthesis'in window))return;const vs=speechSynthesis.getVoices(),f=/samantha|zira|aria|jenny|ava|victoria|karen|moira|serena|susan|tessa|joanna|salli|emma|amy|olivia|sonia|female/i;voice=vs.find(v=>/^en-US/i.test(v.lang)&&f.test(v.name))||vs.find(v=>/^en-GB/i.test(v.lang)&&f.test(v.name))||vs.find(v=>/^en/i.test(v.lang)&&f.test(v.name))||vs.find(v=>/^en-US/i.test(v.lang))||vs.find(v=>/^en/i.test(v.lang))||null}if('speechSynthesis'in window){pickVoice();speechSynthesis.addEventListener?.('voiceschanged',pickVoice)}
+function speak(t,el){if(!('speechSynthesis'in window)){if(el)el.textContent='Озвучка браузером недоступна.';return}speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='en-US';u.rate=.72;u.pitch=1.04;if(voice)u.voice=voice;if(el){el.textContent='Слушай и повторяй…';u.onend=()=>el.textContent=''}speechSynthesis.speak(u)}
+function shuffle(a){a=[...a];for(let i=a.length-1;i;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function tabs(){const box=$('#tabs');box.innerHTML='';Object.entries(L).forEach(([n,l])=>{const b=document.createElement('button');b.className='tab'+(+n===lesson?' on':'');b.textContent=`${l.name} ${l.icon}`;b.onclick=()=>{lesson=+n;step=0;render()};box.appendChild(b)})}
+function nav(){const sc=L[lesson].screens;progress.innerHTML=sc.map((_,i)=>`<span class="dot ${i<=step?'on':''}"></span>`).join('');back.disabled=step===0;back.style.opacity=step===0?'.4':'1';next.textContent=step===sc.length-1?'Сначала ↻':'Дальше →';rewardText.textContent=L[lesson].reward;stars.textContent=(step===sc.length-1)?(lesson===1?'★ ☆ ☆':'★ ★ ★'):'☆ ☆ ☆'}
+function visual(s,audio=true){body.innerHTML=`<div class="visual">${s.v||''}</div><div class="word">${s.w||''}</div>${s.ru?`<div class="ru">${s.ru}</div>`:''}${audio?'<button id="listen" class="listen">🔊 Слушать</button><div id="status" class="status"></div>':''}<div class="note">${s.t==='listen'?'Вова слушает и повторяет. Не требуем чтения.':'Работаем голосом вместе с преподавателем.'}</div>`;if(audio)$('#listen').onclick=()=>speak(s.say,$('#status'))}
+function quizScreen(words,which,goal){const q=quiz[which];body.innerHTML=`<button id="ql" class="listen">🔊 Слушать слово</button><div id="choices" class="choices"></div><div id="status" class="status"></div><div id="score" class="score">Правильных ответов: ${q.n} из ${goal}</div>`;function round(play=true){if(q.n>=goal){q.target=null;$('#status').textContent='🏆 Отлично! Задание выполнено.';return}q.target=words[Math.floor(Math.random()*words.length)];const opts=shuffle([q.target,...shuffle(words.filter(x=>x[0]!==q.target[0])).slice(0,2)]);$('#choices').innerHTML='';opts.forEach(x=>{const b=document.createElement('button');b.className='choice';b.textContent=x[1];b.onclick=()=>{if(x[0]===q.target[0]){b.classList.add('good');q.n++;$('#score').textContent=`Правильных ответов: ${q.n} из ${goal}`;$('#status').textContent='⭐ Правильно!';q.target=null;setTimeout(()=>round(true),600)}else{b.classList.add('bad');$('#status').textContent='Ещё раз послушай 🙂';speak(q.target[0])}};$('#choices').appendChild(b)});if(play)speak(q.target[0],$('#status'))}$('#ql').onclick=()=>q.target?speak(q.target[0],$('#status')):round(true);round(false)}
+function combo(){const a=[['🔴🚗','red car'],['🔵⚽','blue ball'],['🐘🏠','big house'],['🐭🐟','small fish']];body.innerHTML=`<div class="choices combo">${a.map(x=>`<button class="choice comboBtn" data-say="${x[1]}">${x[0]}</button>`).join('')}</div><div id="status" class="status"></div><div class="note">Цель — начать говорить короткими сочетаниями, используя слова из разных уроков.</div>`;document.querySelectorAll('.comboBtn').forEach(b=>b.onclick=()=>speak(b.dataset.say,$('#status')))}
+function read(){body.innerHTML=`<div class="choices read"><button class="choice rbtn" data-say="red">🔴<br><b>red</b></button><button class="choice rbtn" data-say="blue">🔵<br><b>blue</b></button></div><div id="status" class="status"></div><div class="note">Сегодня достаточно узнавать глазами только два слова: <b>red</b> и <b>blue</b>.</div>`;document.querySelectorAll('.rbtn').forEach(b=>b.onclick=()=>speak(b.dataset.say,$('#status')))}
+function finish(s){body.innerHTML=`<div class="finish">${lesson===3?'🌈🏆':'🏆⭐'}</div><div class="stars" style="font-size:40px">${lesson===1?'★ ☆ ☆':'★ ★ ★'}</div>${lesson>1?`<div class="chips">${(lesson===2?oldWords:newWords).map(x=>`<span class="chip">${x[1]} ${x[0]}</span>`).join('')}</div>`:''}<div class="note">${lesson===3?'После урока продолжим голосом: я называю цвет или сочетание, Вова повторяет, а я мягко корректирую произношение.':'Отличная работа!'}</div>`}
+function render(){tabs();const s=L[lesson].screens[step];badge.textContent=`${L[lesson].icon} ${L[lesson].name}`;kicker.textContent=lesson===1?'Мини-урок':lesson===2?'10 новых слов • смотрим • слушаем • повторяем':'10 новых слов • цвета и размеры • слушаем и говорим';title.textContent=s.title;hint.textContent=s.hint||'';if(s.t==='plain')visual(s,false);else if(s.t==='listen')visual(s,true);else if(s.t==='quiz2')quizScreen(oldWords,2,5);else if(s.t==='review3')quizScreen(oldWords,3,4);else if(s.t==='combo3')combo();else if(s.t==='read3')read();else finish(s);nav()}
+back.onclick=()=>{if(step>0){step--;render()}};next.onclick=()=>{const n=L[lesson].screens.length;if(step===n-1){step=0;if(quiz[lesson])quiz[lesson]={n:0,target:null}}else step++;render()};render();
+</script></body></html>
